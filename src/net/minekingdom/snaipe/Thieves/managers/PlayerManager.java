@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import net.minekingdom.snaipe.Thieves.ThievesPlayer;
 import net.minekingdom.snaipe.Thieves.Thieves;
@@ -79,8 +77,8 @@ public class PlayerManager {
     {
         for ( ThievesPlayer thief : stealingPlayers.keySet() )
         {
-            SpoutPlayer splayer = SpoutManager.getPlayer(thief);
-            splayer.closeActiveWindow();
+            Player splayer = thief.getPlayer();//SpoutManager.getPlayer(thief);
+            splayer.closeInventory();
         }
         stealingPlayers.clear();
     }

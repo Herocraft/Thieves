@@ -9,8 +9,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class ItemValues {
-
+public class ItemValues
+{
+    
     private static Thieves plugin;
     
     private static HashMap<Material, Integer> itemLevels = new HashMap<Material, Integer>();
@@ -23,12 +24,26 @@ public class ItemValues {
     
     public static void load()
     {
-        if ( !itemLevels.isEmpty())
+        if (!itemLevels.isEmpty())
             itemLevels.clear();
         
         File itemConfigFile = new File(plugin.getDataFolder() + File.separator + "items.yml");
+        YamlConfiguration itemConfig;
         
-        YamlConfiguration itemConfig = new YamlConfiguration();
+        if (!itemConfigFile.exists())
+        {
+            itemConfig = YamlConfiguration.loadConfiguration(plugin.getResource("items.yml"));
+            try
+            {
+                itemConfig.save(itemConfigFile);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+            itemConfig = YamlConfiguration.loadConfiguration(itemConfigFile);
         
         boolean exists = itemConfigFile.exists();
         
@@ -41,30 +56,30 @@ public class ItemValues {
             
             if (exists)
                 itemConfig.load(itemConfigFile);
-        } 
-        catch (FileNotFoundException e) 
+        }
+        catch (FileNotFoundException e)
         {
             e.printStackTrace();
-        } 
-        catch (IOException e) 
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
-        } 
-        catch (InvalidConfigurationException e) 
+        }
+        catch (InvalidConfigurationException e)
         {
             e.printStackTrace();
         }
         
         if (exists)
         {
-            for ( String itemName : itemConfig.getConfigurationSection("items").getKeys(false) )
+            for (String itemName : itemConfig.getConfigurationSection("items").getKeys(false))
             {
-                if ( Material.matchMaterial(itemName) == null )
+                if (Material.matchMaterial(itemName) == null)
                     continue;
                 
                 Integer level = itemConfig.getInt("items." + itemName);
                 
-                if ( level != null)
+                if (level != null)
                     itemLevels.put(Material.matchMaterial(itemName), level);
             }
         }
@@ -74,7 +89,7 @@ public class ItemValues {
     {
         Integer level = itemLevels.get(material);
         
-        if ( level != null )
+        if (level != null)
             return level;
         else
             return 1;

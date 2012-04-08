@@ -21,7 +21,8 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerListener implements Listener {
+public class PlayerListener implements Listener
+{
     
     private final Thieves plugin;
     
@@ -33,30 +34,30 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event)
     {
-        if ( event.isCancelled() )
+        if (event.isCancelled())
             return;
-
-        if ( event.getPlayer() == null )
+        
+        if (event.getPlayer() == null)
             return;
-
+        
         final ThievesPlayer player = plugin.getPlayerManager().getPlayer(event.getPlayer());
         
-        if ( plugin.getSettingManager().isActiveWorld(player.getWorld()) )
+        if (plugin.getSettingManager().isActiveWorld(player.getWorld()))
         {
             
-            if ( plugin.getPlayerManager().isStealed(player) )
+            if (plugin.getPlayerManager().isStealed(player))
             {
                 ThievesPlayer thief = plugin.getPlayerManager().getThiefFromTarget(event.getPlayer());
                 
-                if ( thief == null )
+                if (thief == null)
                     return;
                 
-                if ( !thief.isTargetWithinRange(player) )
+                if (!thief.isTargetWithinRange(player))
                 {
                     thief.closeWindow();
                 }
                 
-                if ( player.canSeePlayer(thief) )
+                if (player.canSeePlayer(thief))
                 {
                     ThiefDetectEvent detectEvent = new ThiefDetectEvent(thief, player, player);
                     plugin.getServer().getPluginManager().callEvent(detectEvent);
@@ -72,12 +73,12 @@ public class PlayerListener implements Listener {
             {
                 List<ThievesPlayer> thieves = plugin.getPlayerManager().getNearbyThieves(player);
                 
-                if ( thieves == null )
+                if (thieves == null)
                     return;
                 
-                for ( ThievesPlayer thief : thieves )
+                for (ThievesPlayer thief : thieves)
                 {
-                    if ( player.canSeePlayer(thief) )
+                    if (player.canSeePlayer(thief))
                     {
                         ThiefDetectEvent detectEvent = new ThiefDetectEvent(thief, plugin.getPlayerManager().getTarget(thief), player);
                         plugin.getServer().getPluginManager().callEvent(detectEvent);
@@ -90,7 +91,7 @@ public class PlayerListener implements Listener {
                         break;
                     }
                 }
-            }    
+            }
         }
     }
     
@@ -105,36 +106,36 @@ public class PlayerListener implements Listener {
         
         final ThievesPlayer thief = plugin.getPlayerManager().getPlayer(event.getPlayer());
         final Entity entity = event.getRightClicked();
-
+        
         if (entity == null)
             return;
         
-        if ( plugin.getSettingManager().isActiveWorld(thief.getWorld()) )
+        if (plugin.getSettingManager().isActiveWorld(thief.getWorld()))
         {
-            if ( Thieves.isTheftEnabled && thief.hasPermission("thieves.steal") ) //TODO: thieves.steal
+            if (Thieves.isTheftEnabled && thief.hasPermission("thieves.steal"))
             {
-                if ( !thief.isSneaking() )
+                if (!thief.isSneaking())
                     return;
                 
-                if ( entity instanceof Player )
+                if (entity instanceof Player)
                 {
                     ThievesPlayer target = plugin.getPlayerManager().getPlayer((Player) entity);
                     
-                    if ( target.hasPermission("thieves.protected") )
+                    if (target.hasPermission("thieves.protected"))
                     {
                         thief.sendMessage(ChatColor.RED + Language.cannotRobThisPlayer);
                         return;
                     }
                     
-                    if ( thief.getCooldown() > 0 )
+                    if (thief.getCooldown() > 0)
                     {
                         thief.sendMessage(ChatColor.RED + Language.cooldownNotFinished);
                         return;
                     }
                     
-                    if ( !target.canSeePlayer(thief) )
+                    if (!target.canSeePlayer(thief))
                     {
-                        if ( !plugin.getSettingManager().canStealInNonPvPArea() )
+                        if (!plugin.getSettingManager().canStealInNonPvPArea())
                         {
                             EntityDamageByEntityEvent damageEvent = new EntityDamageByEntityEvent(thief.getPlayer(), entity, DamageCause.ENTITY_ATTACK, 1);
                             plugin.getServer().getPluginManager().callEvent(damageEvent);
@@ -149,7 +150,7 @@ public class PlayerListener implements Listener {
                         PlayerStealEvent stealEvent = new PlayerStealEvent(thief, target);
                         plugin.getServer().getPluginManager().callEvent(stealEvent);
                         
-                        if ( stealEvent.isCancelled() )
+                        if (stealEvent.isCancelled())
                             return;
                         
                         thief.startStealing(target);
@@ -162,10 +163,10 @@ public class PlayerListener implements Listener {
     
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event)
-    {    
+    {
         final Player player = event.getPlayer();
         
-        if ( player != null )
+        if (player != null)
             plugin.getPlayerManager().addPlayer(player);
     }
     
@@ -174,8 +175,11 @@ public class PlayerListener implements Listener {
     {
         final Player player = event.getPlayer();
         
-        if ( player != null )
+        if (player != null)
             plugin.getPlayerManager().removePlayer(player);
+        
+        if (plugin.getPlayerManager().getThiefFromTarget(player) != null)
+            plugin.getPlayerManager().getThiefFromTarget(player).closeInventory();
     }
     
     @EventHandler
@@ -183,7 +187,7 @@ public class PlayerListener implements Listener {
     {
         final Player player = event.getPlayer();
         
-        if ( player != null )
+        if (player != null)
             plugin.getPlayerManager().removePlayer(player);
     }
 }

@@ -9,7 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandManager implements CommandExecutor {
+public class CommandManager implements CommandExecutor
+{
     
     public final Thieves plugin;
     
@@ -17,9 +18,9 @@ public class CommandManager implements CommandExecutor {
     {
         plugin = Thieves.getInstance();
     }
-
+    
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (command.getName().equals("thieves"))
         {
@@ -34,7 +35,7 @@ public class CommandManager implements CommandExecutor {
                 {
                     if (player != null)
                     {
-                        if ( player.hasPermission("thieves.toggle") ) //TODO: thieves.toggle
+                        if (player.hasPermission("thieves.toggle"))
                         {
                             if (Thieves.isTheftEnabled)
                             {
@@ -74,10 +75,9 @@ public class CommandManager implements CommandExecutor {
                 if (args[0].equals("reload"))
                 {
                     
-                    
                     if (player != null)
                     {
-                        if ( player.hasPermission("thieves.reload") ) //TODO: thieves.reload
+                        if (player.hasPermission("thieves.reload"))
                         {
                             plugin.getPlayerManager().removeAllThieves();
                             plugin.getSettingManager().loadConfig();
