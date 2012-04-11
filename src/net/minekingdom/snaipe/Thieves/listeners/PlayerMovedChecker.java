@@ -25,7 +25,6 @@ public class PlayerMovedChecker implements Runnable{
 	private HashMap<Player, double[]> playerCoords = new HashMap<Player, double[]>();
 	private Heroes heroes;
 	
-	
 	public PlayerMovedChecker(Thieves thieves) {
 		plugin = thieves;
 		this.heroes = (Heroes)plugin.getServer().getPluginManager().getPlugin("Heroes");

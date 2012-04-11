@@ -85,7 +85,7 @@ public class SettingManager {
         cooldown = config.getInt("general.cooldown", 60);
         permissionLevels = config.getBoolean("general.permission-levels", false);
         enchantmentUnitMultiplier = config.getDouble("general.enchantment-unit-multiplier", 0.115);
-        damage = config.getInt("damage", 20);
+        damage = config.getInt("general.damage", 20);
         
         Language.init(config);
         ItemValues.init();
@@ -249,6 +249,10 @@ public class SettingManager {
         return detectRadius;
     }
     
+    public int getDamage() {
+    	return damage;
+    }
+    
     public int getStunTime()
     {
         return stunTime;
@@ -257,11 +261,6 @@ public class SettingManager {
     public int getTheftRange()
     {
         return theftRange;
-    }
-    
-    public int getDamage()
-    {
-    	return damage;
     }
     
     public List<String> getActiveWorlds()
