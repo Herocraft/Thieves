@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import net.minekingdom.snaipe.Thieves.ThievesPlayer;
 import net.minekingdom.snaipe.Thieves.Thieves;
@@ -63,6 +61,7 @@ public class PlayerManager {
     public void removeThief(ThievesPlayer player)
     {
         stealingPlayers.remove(player);
+        plugin.getMoveChecker().removeThief(player, getTarget(player));
     }
     
     public boolean isThief(ThievesPlayer player)
@@ -79,8 +78,9 @@ public class PlayerManager {
     {
         for ( ThievesPlayer thief : stealingPlayers.keySet() )
         {
-            SpoutPlayer splayer = SpoutManager.getPlayer(thief);
-            splayer.closeActiveWindow();
+            Player splayer = thief.getPlayer();//SpoutManager.getPlayer(thief);
+            splayer.closeInventory();
+            plugin.getMoveChecker().removeThief(thief, getTarget(thief));
         }
         stealingPlayers.clear();
     }
@@ -88,6 +88,7 @@ public class PlayerManager {
     public void addThief(ThievesPlayer thief, ThievesPlayer target)
     {
         stealingPlayers.put(thief, target);
+        plugin.getMoveChecker().addThief(thief.getPlayer(), target.getPlayer());
     }
 
     public boolean isStealed(ThievesPlayer player) 

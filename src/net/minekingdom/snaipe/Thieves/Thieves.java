@@ -25,7 +25,8 @@ public class Thieves extends JavaPlugin {
     private SettingManager settingManager;
     private PlayerManager playerManager;
     private CommandManager commandManager;
-
+    
+    private PlayerMovedChecker moveChecker;
     public static boolean isTheftEnabled = true;
     
     public static Thieves getInstance()
@@ -48,8 +49,13 @@ public class Thieves extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerListener, this);
 
         getCommand("thieves").setExecutor(commandManager);
-        
+        moveChecker = new PlayerMovedChecker(this);
         log(getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!");
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, moveChecker, 1, 1);
+    }
+    
+    public PlayerMovedChecker getMoveChecker() {
+    	return moveChecker;
     }
     
     public void onDisable() 

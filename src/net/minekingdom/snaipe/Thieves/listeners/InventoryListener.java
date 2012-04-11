@@ -3,19 +3,13 @@ package net.minekingdom.snaipe.Thieves.listeners;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
-import org.getspout.spout.inventory.SpoutCraftItemStack;
-import org.getspout.spoutapi.event.inventory.InventoryClickEvent;
-import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
-import org.getspout.spoutapi.event.inventory.InventorySlotType;
-
-import net.minecraft.server.Packet103SetSlot;
 
 import net.minekingdom.snaipe.Thieves.ItemValues;
 import net.minekingdom.snaipe.Thieves.Language;
@@ -23,7 +17,8 @@ import net.minekingdom.snaipe.Thieves.ThievesPlayer;
 import net.minekingdom.snaipe.Thieves.Thieves;
 import net.minekingdom.snaipe.Thieves.events.ItemStealEvent;
 
-public class InventoryListener implements Listener {
+public class InventoryListener implements Listener
+{
     
     private final Thieves plugin;
     
@@ -32,48 +27,41 @@ public class InventoryListener implements Listener {
         plugin = Thieves.getInstance();
     }
     
+    @SuppressWarnings("deprecation")
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event)
+    public void onInventoryClick(final InventoryClickEvent event)
     {
-        if ( event.isCancelled() )
-            return;
-
-        if ( event.getPlayer() == null )
+        if (event.isCancelled())
             return;
         
-        final ThievesPlayer thief = plugin.getPlayerManager().getPlayer(event.getPlayer());
+        if (event.getWhoClicked() == null)
+            return;
+        
+        final ThievesPlayer thief = plugin.getPlayerManager().getPlayer((Player) event.getWhoClicked());
         final ThievesPlayer target = plugin.getPlayerManager().getTarget(thief);
-        
-        if ( target != null )
+                
+        if (target != null && event.getRawSlot() < 36)
         {
-            if ( event.isShiftClick() )
+            if (event.isShiftClick())
+            {
+                event.setCancelled(true);
+                return;
+            }
+                        
+            if (event.getCurrentItem().getAmount() == 0)
+            {
+                return;
+            }
+            
+            if (event.getRawSlot() < 9 && !plugin.getSettingManager().canStealHotBar())
             {
                 event.setCancelled(true);
                 return;
             }
             
-            if ( event.getSlotType().equals(InventorySlotType.PACK) )
-            {
-                event.setCancelled(true);
-                return;
-            }
+            ItemStack item = event.getCurrentItem();
             
-            if ( event.getCursor() != null )
-            {
-                if ( event.getSlotType().equals(InventorySlotType.CONTAINER) )
-                {
-                    event.setCancelled(true);
-                }
-                return;
-            }
-            
-            if ( event.getItem() == null )
-                return;
-            
-            final ItemStack item = event.getItem();
-            final int slot = event.getSlot();
-            
-            if ( thief.getMaxItemWealth() < thief.getItemWealth() + ItemValues.valueOf(item.getType()) )
+            if (thief.getMaxItemWealth() < thief.getItemWealth() + ItemValues.valueOf(item.getType()))
             {
                 thief.sendMessage(ChatColor.RED + Language.cannotStealMore);
                 event.setCancelled(true);
@@ -81,20 +69,21 @@ public class InventoryListener implements Listener {
             }
             
             Map<Enchantment, Integer> enchantments = item.getEnchantments();
-            double enchantmentMultiplier = 1D;
+            double enchantmentMultiplier = 1;
             
-            for( Enchantment enchantment : enchantments.keySet() )
+            for (Enchantment enchantment : enchantments.keySet())
             {
-            	enchantmentMultiplier += plugin.getSettingManager().getEnchantmentUnitMultiplier()*item.getEnchantmentLevel(enchantment);
+                enchantmentMultiplier += plugin.getSettingManager().getEnchantmentUnitMultiplier() * item.getEnchantmentLevel(enchantment);
             }
-            
-            double rand = (double) (Math.random()*100 + 1);
-            boolean successful = rand <= 100*( 1D - ((double) ItemValues.valueOf(item.getType())*enchantmentMultiplier ) / ((double) thief.getThiefLevel() + 9 ));
-            
-            ItemStealEvent stealEvent = new ItemStealEvent(thief, target, event.getItem(), successful);
+            boolean successful = false;
+            double rand = Math.random() * 100 + 1;
+            if (rand <= (double) 100 * ((double) 1 - ((double) ItemValues.valueOf(item.getType()) * enchantmentMultiplier) / ((double) thief.getThiefLevel() + (double) 9)))
+                successful = true;
+                        
+            ItemStealEvent stealEvent = new ItemStealEvent(thief, target, event.getCurrentItem(), successful);
             plugin.getServer().getPluginManager().callEvent(stealEvent);
             
-            if ( stealEvent.isCancelled() )
+            if (stealEvent.isCancelled())
             {
                 event.setCancelled(true);
                 return;
@@ -103,68 +92,48 @@ public class InventoryListener implements Listener {
             {
                 thief.addItemToWealth(item);
                 
-                if ( !stealEvent.isSuccessful() )
+                if (!successful)
                 {
                     target.sendMessage(ChatColor.RED + Language.thiefSpotted);
                     event.setCancelled(true);
                     return;
                 }
                 
-                event.setResult(Result.DENY);
-                
                 thief.addThiefExperience(ItemValues.valueOf(item.getType()));
                 
-                if ( thief.getThiefExperience() > Math.ceil(100*Math.pow(1.6681, thief.getThiefLevel())) )
+                if (thief.getThiefExperience() > Math.ceil(100 * Math.pow(1.6681, thief.getThiefLevel())))
                 {
                     thief.sendMessage(ChatColor.RED + Language.levelUp);
                     thief.incrementThiefLevel();
                 }
-                
-                plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-                    @Override
-                    public void run() 
-                    {
-                        
-                        net.minecraft.server.ItemStack cursor = SpoutCraftItemStack.getCraftItemStack(new ItemStack(item.getType(), 1, item.getDurability(), item.getData().getData())).getHandle();
-                        ((CraftPlayer) thief.getPlayer()).getHandle().inventory.b(cursor);
-                        
-                        if ( item.getAmount() > 1 )
-                        {
-                            net.minecraft.server.ItemStack clicked = SpoutCraftItemStack.getCraftItemStack(new ItemStack(item.getType(), item.getAmount() - 1, item.getDurability(), item.getData().getData())).getHandle();
-                            ((CraftPlayer) thief.getPlayer()).getHandle().activeContainer.b(slot).c(clicked);
-                        }
-                        else
-                        {
-                            ((CraftPlayer) thief.getPlayer()).getHandle().activeContainer.b(slot).c(null);
-                        }
-                        
-                        ((CraftPlayer) thief.getPlayer()).getHandle().netServerHandler.sendPacket(new Packet103SetSlot(-1, -1, ((CraftPlayer) thief.getPlayer()).getHandle().inventory.l()));
-                    }
-                    
-                }, 1L);
+                                
+                event.setCancelled(true);
+                ItemStack cursor = new ItemStack(item.getType(), 1, item.getDurability(), item.getData().getData());
+                cursor.setDurability(item.getDurability());
+                thief.getInventory().addItem(cursor);
+                target.getInventory().removeItem(cursor);
             }
+            
+            target.updateInventory();
+            thief.updateInventory();
         }
     }
     
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event)
     {
-        if (event.isCancelled())
-            return;
-        
-        final Player player = event.getPlayer();
-        if ( player != null )
+        final Player player = (Player) event.getPlayer();
+        if (player != null)
         {
             ThievesPlayer thief = plugin.getPlayerManager().getPlayer(player);
             
-            if ( plugin.getPlayerManager().isThief(thief) )
+            if (plugin.getPlayerManager().isThief(thief))
             {
                 plugin.getPlayerManager().removeThief(thief);
                 thief.setCooldown(plugin.getSettingManager().getCooldown());
                 thief.setItemWealth(0);
             }
         }
-            
+        
     }
 }
