@@ -25,6 +25,7 @@ public class PlayerMovedChecker implements Runnable{
 	private HashMap<Player, double[]> playerCoords = new HashMap<Player, double[]>();
 	private Heroes heroes;
 	
+	
 	public PlayerMovedChecker(Thieves thieves) {
 		plugin = thieves;
 		this.heroes = (Heroes)plugin.getServer().getPluginManager().getPlugin("Heroes");
@@ -73,7 +74,7 @@ public class PlayerMovedChecker implements Runnable{
                     thief.stun(plugin.getSettingManager().getStunTime());
                     if(heroes != null) {
                     	Hero hero = heroes.getCharacterManager().getHero(thief.getPlayer());
-                    	hero.setHealth(hero.getHealth() - 20);
+                    	hero.setHealth(hero.getHealth() - plugin.getSettingManager().getDamage());
                     	hero.syncHealth();
                     }
                     
@@ -109,7 +110,7 @@ public class PlayerMovedChecker implements Runnable{
                     thief.stun(plugin.getSettingManager().getStunTime());
                     if(heroes != null) {
                     	Hero hero = heroes.getCharacterManager().getHero(thief.getPlayer());
-                    	hero.setHealth(hero.getHealth() - 20);
+                    	hero.setHealth(hero.getHealth() - plugin.getSettingManager().getDamage());
                     	hero.syncHealth();
                     }
                     thief.sendMessage(ChatColor.RED + Language.youHaveBeenDiscovered);
