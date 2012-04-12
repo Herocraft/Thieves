@@ -47,7 +47,8 @@ public class InventoryListener implements Listener
                 event.setCancelled(true);
                 return;
             }
-                        
+            
+            if(event.getCurrentItem() == null)return;
             if (event.getCurrentItem().getAmount() == 0)
             {
                 return;
@@ -109,6 +110,7 @@ public class InventoryListener implements Listener
                                 
                 event.setCancelled(true);
                 ItemStack cursor = new ItemStack(item.getType(), 1, item.getDurability(), item.getData().getData());
+                cursor.addEnchantments(item.getEnchantments());
                 cursor.setDurability(item.getDurability());
                 thief.getInventory().addItem(cursor);
                 target.getInventory().removeItem(cursor);

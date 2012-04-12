@@ -54,7 +54,7 @@ public class PlayerListener implements Listener
                 if (entity instanceof Player)
                 {
                     ThievesPlayer target = plugin.getPlayerManager().getPlayer((Player) entity);
-                    
+                    if(target == null)return;
                     if (target.hasPermission("thieves.protected"))
                     {
                         thief.sendMessage(ChatColor.RED + Language.cannotRobThisPlayer);
