@@ -21,6 +21,7 @@ public class PlayerMovedChecker implements Runnable{
 	
 	private Thieves plugin;
 	private Collection<Player> thiefTargets = new HashSet<Player>();
+	private Collection<Player> targetCopy = new HashSet<Player>();
 	private HashMap<Player, Player> thieves = new HashMap<Player, Player>();
 	private HashMap<Player, double[]> playerCoords = new HashMap<Player, double[]>();
 	private Heroes heroes;
@@ -32,7 +33,11 @@ public class PlayerMovedChecker implements Runnable{
 
 	@Override
 	public void run() {
-		Iterator<Player> iterator = thiefTargets.iterator();
+		if(!targetCopy.equals(thiefTargets)) {
+			targetCopy.clear();
+			targetCopy.addAll(thiefTargets);
+		}
+		Iterator<Player> iterator = targetCopy.iterator();
 		while(iterator.hasNext()) {
 			Player player = iterator.next();
 			if(checkPlayer(player)){onPlayerMove(thieves.get(player), player); playerCanSee(thieves.get(player), player);}
@@ -48,7 +53,13 @@ public class PlayerMovedChecker implements Runnable{
 		double newY = playerLoc.getY();
 		double newZ = playerLoc.getZ();
 		if(oldCoords == null)return false;
-		return(oldCoords[0] != newX || oldCoords[1] != newY || oldCoords[2] != newZ);
+		boolean didMove = (oldCoords[0] != newX || oldCoords[1] != newY || oldCoords[2] != newZ);
+		if(didMove) {
+			oldCoords[0] = newX;
+			oldCoords[1] = newY;
+			oldCoords[2] = newZ;
+		}
+		return didMove;
 	}
 	
 	public void playerCanSee(Player thiever, Player thieved) {
