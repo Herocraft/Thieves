@@ -21,7 +21,6 @@ public class PlayerMovedChecker implements Runnable{
 	
 	private Thieves plugin;
 	private Collection<Player> thiefTargets = new HashSet<Player>();
-	private Collection<Player> targetCopy = new HashSet<Player>();
 	private HashMap<Player, Player> thieves = new HashMap<Player, Player>();
 	private HashMap<Player, double[]> playerCoords = new HashMap<Player, double[]>();
 	private Heroes heroes;
@@ -33,16 +32,13 @@ public class PlayerMovedChecker implements Runnable{
 
 	@Override
 	public void run() {
-		if(!targetCopy.equals(thiefTargets)) {
-			targetCopy.clear();
-			targetCopy.addAll(thiefTargets);
-		}
-		Iterator<Player> iterator = targetCopy.iterator();
+		Iterator<Player> iterator = thiefTargets.iterator();
 		while(iterator.hasNext()) {
 			Player player = iterator.next();
-			if(checkPlayer(player)){onPlayerMove(thieves.get(player), player); playerCanSee(thieves.get(player), player);}
+			if(checkPlayer(player)){
+				if(onPlayerMove(thieves.get(player), player) || playerCanSee(thieves.get(player), player))iterator.remove();
+			}
 			else playerCanSee(thieves.get(player), player);
-			
 		}
 	}
 	
@@ -62,7 +58,7 @@ public class PlayerMovedChecker implements Runnable{
 		return didMove;
 	}
 	
-	public void playerCanSee(Player thiever, Player thieved) {
+	public boolean playerCanSee(Player thiever, Player thieved) {
 		
 		final ThievesPlayer player = plugin.getPlayerManager().getPlayer(thieved);
         
@@ -72,7 +68,7 @@ public class PlayerMovedChecker implements Runnable{
             	ThievesPlayer thief = plugin.getPlayerManager().getPlayer(thiever);
                 
                 if (thief == null)
-                    return;
+                    return false;
                 
             	if (player.canSeePlayer(thief))
                 {
@@ -89,12 +85,14 @@ public class PlayerMovedChecker implements Runnable{
                     }
                     
                     thief.sendMessage(ChatColor.RED + Language.youHaveBeenDiscovered);
+                    return true;
                 }
             }
+			return false;
         
 	}
 	
-	public void onPlayerMove(Player thiever, Player thieved) {
+	public boolean onPlayerMove(Player thiever, Player thieved) {
 		final ThievesPlayer player = plugin.getPlayerManager().getPlayer(thieved);
         
             if (plugin.getPlayerManager().isStealed(player))
@@ -102,12 +100,13 @@ public class PlayerMovedChecker implements Runnable{
                 ThievesPlayer thief = plugin.getPlayerManager().getPlayer(thiever);
                 
                 if (thief == null)
-                    return;
+                    return false;
                 
                 if (!thief.isTargetWithinRange(player))
                 {
                     thief.closeWindow();
                     removeThief(thiever, thieved);
+                    return true;
                 }
                 
                 if (player.canSeePlayer(thief))
@@ -124,8 +123,11 @@ public class PlayerMovedChecker implements Runnable{
                     	hero.syncHealth();
                     }
                     thief.sendMessage(ChatColor.RED + Language.youHaveBeenDiscovered);
+                    return true;
                 }
             }
+            
+            return false;
         }
 	
 	public void addThief(Player thief, Player thieved) {
@@ -136,7 +138,6 @@ public class PlayerMovedChecker implements Runnable{
 	}
 	
 	public void removeThief(Player thief, Player thieved) {
-		thiefTargets.remove(thieved);
 		playerCoords.remove(thieved);
 		thieves.remove(thieved);
 	}
