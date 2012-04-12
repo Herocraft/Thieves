@@ -38,7 +38,7 @@ public class PlayerMovedChecker implements Runnable{
 			if(checkPlayer(player)){
 				if(onPlayerMove(thieves.get(player), player) || playerCanSee(thieves.get(player), player))iterator.remove();
 			}
-			else playerCanSee(thieves.get(player), player);
+			else if(playerCanSee(thieves.get(player), player)) iterator.remove();
 		}
 	}
 	
