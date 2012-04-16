@@ -194,7 +194,7 @@ public class SettingManager {
     
     public void savePlayer(ThievesPlayer player)
     {
-        if ( plugin.getSettingManager().isPermissionLevels() )
+        if ( plugin.getSettingManager().isPermissionLevels() || player == null || plugin.getDataFolder() == null)
             return;
         
         File playerDataFile = new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + player.getName() + ".yml");
