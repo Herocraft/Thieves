@@ -78,7 +78,7 @@ public class InventoryListener implements Listener
             }
             boolean successful = false;
             double rand = Math.random() * 100 + 1;
-            if (rand <= (double) 100 * ((double) 1 - ((double) ItemValues.valueOf(item.getType()) * enchantmentMultiplier) / ((double) thief.getThiefLevel() + (double) 9)))
+            if (rand <= ((double) 100 * ((double) 1 - ((double) ItemValues.valueOf(item.getType()) * enchantmentMultiplier) / ((double) thief.getThiefLevel() + (double) 9))) * plugin.getSettingManager().getSuccessMultiplier())
                 successful = true;
                         
             ItemStealEvent stealEvent = new ItemStealEvent(thief, target, event.getCurrentItem(), successful);

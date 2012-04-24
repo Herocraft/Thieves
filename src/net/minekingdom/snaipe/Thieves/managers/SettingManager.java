@@ -36,6 +36,7 @@ public class SettingManager {
     private int theftRange;
     private int cooldown;
     private int damage;
+    private double stealChanceMultiplier;
     
 	private double enchantmentUnitMultiplier;
 
@@ -86,6 +87,7 @@ public class SettingManager {
         permissionLevels = config.getBoolean("general.permission-levels", false);
         enchantmentUnitMultiplier = config.getDouble("general.enchantment-unit-multiplier", 0.115);
         damage = config.getInt("general.damage", 20);
+        stealChanceMultiplier = config.getDouble("general.steal-success-multiplier", 1);
         
         Language.init(config);
         ItemValues.init();
@@ -291,5 +293,9 @@ public class SettingManager {
 	public double getEnchantmentUnitMultiplier() 
 	{
 		return enchantmentUnitMultiplier;
+	}
+	
+	public double getSuccessMultiplier() {
+		return stealChanceMultiplier;
 	}
 }
