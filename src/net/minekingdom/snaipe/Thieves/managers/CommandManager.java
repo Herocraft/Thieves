@@ -37,24 +37,24 @@ public class CommandManager implements CommandExecutor
 					if(player != null) {
 						player.sendMessage(ChatColor.GREEN + "===Thieves Help===");
 						if(player.hasPermission("thieves.toggle"))
-							player.sendMessage(ChatColor.GREEN + "/thieves toggle [Server/Self] - Toggles thievery for all players (Server) or just you (Self)");
+							player.sendMessage(ChatColor.GOLD + "/thieves toggle [Server/Self]" + ChatColor.GREEN + " - Toggles thievery for all players (Server) or just you (Self)");
 						else
-							player.sendMessage(ChatColor.GREEN + "/thieves toggle - Toggles thievery on and off. While off, Shift-Clicking someone will not attempt to steal.");
+							player.sendMessage(ChatColor.GOLD + "/thieves toggle" + ChatColor.GREEN + " - Toggles thievery on and off. While off, Shift-Clicking someone will not attempt to steal.");
 						
-						player.sendMessage(ChatColor.GREEN + "/thieves level (lvl) - Displays the current thievery level and remaning experience to the next level.");
-						player.sendMessage(ChatColor.GREEN + "/thieves valueof - Displays the item value of a given item.");
-						player.sendMessage(ChatColor.GREEN + "/thieves maxvalue - Displays the maximum item value that can be stolen at any one time.");
-						player.sendMessage(ChatColor.GREEN + "/thieves cooldown (cd) - Displays the the time remaning until thievery is availible again.");
+						player.sendMessage(ChatColor.GOLD + "/thieves level (lvl)" + ChatColor.GREEN + " - Displays the current thievery level and remaning experience to the next level.");
+						player.sendMessage(ChatColor.GOLD + "/thieves valueof" + ChatColor.GREEN + " - Displays the item value of a given item.");
+						player.sendMessage(ChatColor.GOLD + "/thieves maxvalue" + ChatColor.GREEN + " - Displays the maximum item value that can be stolen at any one time.");
+						player.sendMessage(ChatColor.GOLD + "/thieves cooldown" + ChatColor.GREEN + " (cd) - Displays the the time remaning until thievery is availible again.");
 						
 						if(player.hasPermission("thieves.reload"))
-							player.sendMessage(ChatColor.GREEN + "/thieves reload - Reloads config files for thievery and all players with access to thievery");
+							player.sendMessage(ChatColor.GOLD + "/thieves reload" + ChatColor.GREEN + " - Reloads config files for thievery and all players with access to thievery");
 					}
 					else {
 						Thieves.log("/thieves toggle [Server/Self] - Toggles thievery for all players (Server) or just you (Self)");
 						Thieves.log("/thieves reload - Reloads config files for thievery and all players with access to thievery");
 					}
 				}
-				
+				else
 				if(args[0].toUpperCase().equals("LEVEL") || args[0].toUpperCase().equals("LVL")) {
 					if(player != null) {
 						int level = plugin.getPlayerManager().getPlayer(player).getLevel();
@@ -64,7 +64,7 @@ public class CommandManager implements CommandExecutor
 						player.sendMessage(ChatColor.GREEN + "[Thieves] Current Experience: " + xp + "/" + nextXP +".");
 					}
 				}
-				
+				else
 				if(args[0].toUpperCase().equals("COOLDOWN") || args[0].toUpperCase().equals("CD")) {
 					if(player != null) {
 						int cooldown = (int) (plugin.getPlayerManager().getPlayer(player).getCooldown() / 1000);
@@ -76,7 +76,7 @@ public class CommandManager implements CommandExecutor
 						}
 					}
 				}
-				
+				else
 				if(args[0].toUpperCase().equals("VALUEOF")) {
 					if(args.length >= 2) {
 						Material material;
@@ -107,13 +107,13 @@ public class CommandManager implements CommandExecutor
 						}
 					}
 				}
-				
+				else
 				if(args[0].toUpperCase().equals("MAXVALUE")) {
 					if(player != null) {
 						player.sendMessage(ChatColor.GREEN + "You may steal a maximum item value of " + plugin.getPlayerManager().getPlayer(player).getMaxItemWealth() + " from your targets.");
 					}
 				}
-				
+				else
 				if (args[0].toUpperCase().equals("TOGGLE"))
 				{
 					if (player != null)
@@ -173,9 +173,8 @@ public class CommandManager implements CommandExecutor
 						}
 					}
 					
-					return true;
 				}
-				
+				else
 				if (args[0].toUpperCase().equals("RELOAD"))
 				{
 					
@@ -197,9 +196,17 @@ public class CommandManager implements CommandExecutor
 						Thieves.log("Configuration reloaded.");
 					}
 					
-					return true;
+				}
+				else 
+				if (player != null) {
+					player.sendMessage(ChatColor.GREEN + "[Thieves] Type /thieves help for info on thieves commands");
 				}
 			}
+			else 
+			if (player != null) {
+				player.sendMessage(ChatColor.GREEN + "[Thieves] Type /thieves help for info on thieves commands");
+			}
+			return true;
 		}
 		return false;
 	}

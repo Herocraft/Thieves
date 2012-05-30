@@ -59,7 +59,6 @@ public class ThievesPlayer implements Player
     private Player player;
     private HashMap<World, Integer> thiefLevels = new HashMap<World, Integer>();
     private HashMap<World, Long> thiefExperience = new HashMap<World, Long>();
-    private HashMap<World, Long> thiefNextLevelExperience = new HashMap<World, Long>();
     private long cooldown = 0;
     private int itemWealth = 0;
     private boolean isEnabled = true;
@@ -116,7 +115,6 @@ public class ThievesPlayer implements Player
     public void incrementThiefLevel(World world)
     {
         thiefLevels.put(world, thiefLevels.get(world) + 1);
-        thiefNextLevelExperience.put(world, (long)Math.ceil(100 * Math.pow(1.6681, thiefLevels.get(world))));
     }
 
     public void addThiefExperience(int exp)
@@ -160,18 +158,11 @@ public class ThievesPlayer implements Player
     }
     
     public long getExperienceToNextLevel() {
-    	return getThiefExperience(getWorld());
+    	return getExperienceToNextLevel(getWorld());
     }
     
     public long getExperienceToNextLevel(World world) {
-    	Long experience = thiefNextLevelExperience.get(world);
-    	if(experience != null && experience > 0)
-    		return experience;
-    	else {
-    		experience = (long)Math.ceil(100 * Math.pow(1.6681, thiefLevels.get(world)));
-    		thiefNextLevelExperience.put(world, experience);
-    		return experience;
-    	}
+    	return (long)Math.ceil(100 * Math.pow(1.6681, thiefLevels.get(world)));
     }
 
     public void startStealing(ThievesPlayer target)
