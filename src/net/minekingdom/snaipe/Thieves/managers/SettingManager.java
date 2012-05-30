@@ -141,7 +141,7 @@ public class SettingManager {
                 levels.put(world, 1);
                 experiences.put(world, (long) 0);
             }
-            return new ThievesPlayer(player, levels, experiences);
+            return new ThievesPlayer(player, levels, experiences, true);
         } 
         catch (IOException e) 
         {
@@ -158,7 +158,7 @@ public class SettingManager {
                 levels.put(world, 1);
                 experiences.put(world, (long) 0);
             }
-            return new ThievesPlayer(player, levels, experiences);
+            return new ThievesPlayer(player, levels, experiences, true);
         } 
         catch (InvalidConfigurationException e) 
         {
@@ -174,11 +174,12 @@ public class SettingManager {
                 levels.put(world, 1);
                 experiences.put(world, (long) 0);
             }
-            return new ThievesPlayer(player, levels, experiences);
+            return new ThievesPlayer(player, levels, experiences, true);
         }
         
         HashMap<World, Integer> levels = new HashMap<World, Integer>();
         HashMap<World, Long> experiences = new HashMap<World, Long>();
+        boolean isEnabled = playerData.getBoolean("Enabled", true);
         for ( String s_world : activeWorlds )
         {
             World world = plugin.getServer().getWorld(s_world);
@@ -190,8 +191,10 @@ public class SettingManager {
             levels.put(world, level);
             experiences.put(world, exp);
         }
-        
-        return new ThievesPlayer(player, levels, experiences);
+        ThievesPlayer toReturn =  new ThievesPlayer(player, levels, experiences, isEnabled);
+        if(playerData.getInt("RemainingCooldown", 0) > 0)
+        	toReturn.setCooldown(playerData.getInt("RemainingCooldown", 0));
+        return toReturn;
     }
     
     public void savePlayer(ThievesPlayer player)
@@ -211,7 +214,8 @@ public class SettingManager {
             }
             
             playerData.load(playerDataFile);
-            
+            playerData.set("Enabled", player.getEnabled());
+            playerData.set("RemainingCooldown", player.getCooldown() / 1000);
             for ( String world : activeWorlds )
             {
                 if ( plugin.getServer().getWorld(world) == null )

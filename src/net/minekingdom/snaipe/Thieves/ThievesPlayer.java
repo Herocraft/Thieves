@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.MobEffect;
 import net.minecraft.server.MobEffectList;
 
@@ -58,19 +59,30 @@ public class ThievesPlayer implements Player
     private Player player;
     private HashMap<World, Integer> thiefLevels = new HashMap<World, Integer>();
     private HashMap<World, Long> thiefExperience = new HashMap<World, Long>();
+    private HashMap<World, Long> thiefNextLevelExperience = new HashMap<World, Long>();
     private long cooldown = 0;
     private int itemWealth = 0;
+    private boolean isEnabled = true;
 
     public ThievesPlayer(Player player)
     {
         this.player = player;
     }
 
-    public ThievesPlayer(Player player, HashMap<World, Integer> thiefLevels, HashMap<World, Long> thiefExperience)
+    public ThievesPlayer(Player player, HashMap<World, Integer> thiefLevels, HashMap<World, Long> thiefExperience, boolean isEnabled)
     {
         this.player = player;
         this.thiefLevels = thiefLevels;
         this.thiefExperience = thiefExperience;
+        this.isEnabled = isEnabled;
+    }
+    
+    public boolean getEnabled() {
+    	return isEnabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+    	isEnabled = enabled;
     }
 
     public int getThiefLevel()
@@ -104,6 +116,7 @@ public class ThievesPlayer implements Player
     public void incrementThiefLevel(World world)
     {
         thiefLevels.put(world, thiefLevels.get(world) + 1);
+        thiefNextLevelExperience.put(world, (long)Math.ceil(100 * Math.pow(1.6681, thiefLevels.get(world))));
     }
 
     public void addThiefExperience(int exp)
@@ -144,6 +157,21 @@ public class ThievesPlayer implements Player
             return experience;
         else
             return 0;
+    }
+    
+    public long getExperienceToNextLevel() {
+    	return getThiefExperience(getWorld());
+    }
+    
+    public long getExperienceToNextLevel(World world) {
+    	Long experience = thiefNextLevelExperience.get(world);
+    	if(experience != null && experience > 0)
+    		return experience;
+    	else {
+    		experience = (long)Math.ceil(100 * Math.pow(1.6681, thiefLevels.get(world)));
+    		thiefNextLevelExperience.put(world, experience);
+    		return experience;
+    	}
     }
 
     public void startStealing(ThievesPlayer target)
@@ -1086,11 +1114,11 @@ public class ThievesPlayer implements Player
         player.setTotalExperience(arg0);
     }
 
-    @Deprecated
     @Override
     public void updateInventory()
     {
-        player.updateInventory();
+    	EntityPlayer player = ((CraftPlayer)this.player).getHandle();
+        player.a(player.activeContainer, player.activeContainer.b());
     }
 
     @Override

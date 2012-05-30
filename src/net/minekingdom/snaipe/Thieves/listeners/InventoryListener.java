@@ -1,6 +1,7 @@
 package net.minekingdom.snaipe.Thieves.listeners;
 
 import java.util.Map;
+import java.util.Random;
 
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
@@ -21,13 +22,13 @@ public class InventoryListener implements Listener
 {
     
     private final Thieves plugin;
+    private static final Random random = new Random();
     
     public InventoryListener()
     {
         plugin = Thieves.getInstance();
     }
     
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event)
     {
@@ -77,7 +78,7 @@ public class InventoryListener implements Listener
                 enchantmentMultiplier += plugin.getSettingManager().getEnchantmentUnitMultiplier() * item.getEnchantmentLevel(enchantment);
             }
             boolean successful = false;
-            double rand = Math.random() * 100 + 1;
+            int rand = random.nextInt(100) + 1;
             if (rand <= ((double) 100 * ((double) 1 - ((double) ItemValues.valueOf(item.getType()) * enchantmentMultiplier) / ((double) thief.getThiefLevel() + (double) 9))) * plugin.getSettingManager().getSuccessMultiplier())
                 successful = true;
                         
@@ -102,9 +103,9 @@ public class InventoryListener implements Listener
                 
                 thief.addThiefExperience(ItemValues.valueOf(item.getType()));
                 
-                if (thief.getThiefExperience() > Math.ceil(100 * Math.pow(1.6681, thief.getThiefLevel())))
+                if (thief.getThiefExperience() > thief.getExperienceToNextLevel())
                 {
-                    thief.sendMessage(ChatColor.RED + Language.levelUp);
+                    thief.sendMessage(ChatColor.RED + "You're thieving level has increased to " + (thief.getThiefLevel() + 1) +"!");
                     thief.incrementThiefLevel();
                 }
                                 
@@ -115,7 +116,6 @@ public class InventoryListener implements Listener
                 thief.getInventory().addItem(cursor);
                 target.getInventory().removeItem(cursor);
             }
-            
             target.updateInventory();
             thief.updateInventory();
         }
