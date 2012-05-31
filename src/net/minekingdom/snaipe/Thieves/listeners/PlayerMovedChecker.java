@@ -63,7 +63,7 @@ public class PlayerMovedChecker implements Runnable{
 		final ThievesPlayer player = plugin.getPlayerManager().getPlayer(thieved);
         
             
-            if (plugin.getPlayerManager().isStealed(player))
+            if (plugin.getPlayerManager().isStealing(player))
             {
             	ThievesPlayer thief = plugin.getPlayerManager().getPlayer(thiever);
                 
@@ -95,7 +95,7 @@ public class PlayerMovedChecker implements Runnable{
 	public boolean onPlayerMove(Player thiever, Player thieved) {
 		final ThievesPlayer player = plugin.getPlayerManager().getPlayer(thieved);
         
-            if (plugin.getPlayerManager().isStealed(player))
+            if (plugin.getPlayerManager().isStealing(player))
             {
                 ThievesPlayer thief = plugin.getPlayerManager().getPlayer(thiever);
                 

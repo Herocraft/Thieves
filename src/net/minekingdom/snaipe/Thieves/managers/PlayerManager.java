@@ -91,7 +91,7 @@ public class PlayerManager {
         plugin.getMoveChecker().addThief(thief.getPlayer(), target.getPlayer());
     }
 
-    public boolean isStealed(ThievesPlayer player) 
+    public boolean isStealing(ThievesPlayer player) 
     {
         return stealingPlayers.containsValue(player);
     }

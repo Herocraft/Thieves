@@ -6,6 +6,7 @@ main: net.minekingdom.snaipe.Thieves.Thieves
 
 commands:
     thieves:
+        aliases: ['th', 'thief']
         description: Basic command
         usage: /thieves toggle
 

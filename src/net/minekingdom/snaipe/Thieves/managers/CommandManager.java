@@ -44,7 +44,7 @@ public class CommandManager implements CommandExecutor
 						player.sendMessage(ChatColor.GOLD + "/thieves level (lvl)" + ChatColor.GREEN + " - Displays the current thievery level and remaning experience to the next level.");
 						player.sendMessage(ChatColor.GOLD + "/thieves valueof" + ChatColor.GREEN + " - Displays the item value of a given item.");
 						player.sendMessage(ChatColor.GOLD + "/thieves maxvalue" + ChatColor.GREEN + " - Displays the maximum item value that can be stolen at any one time.");
-						player.sendMessage(ChatColor.GOLD + "/thieves cooldown" + ChatColor.GREEN + " (cd) - Displays the the time remaning until thievery is availible again.");
+						player.sendMessage(ChatColor.GOLD + "/thieves cooldown (cd)" + ChatColor.GREEN + " - Displays the the time remaning until thievery is availible again.");
 						
 						if(player.hasPermission("thieves.reload"))
 							player.sendMessage(ChatColor.GOLD + "/thieves reload" + ChatColor.GREEN + " - Reloads config files for thievery and all players with access to thievery");
@@ -57,7 +57,9 @@ public class CommandManager implements CommandExecutor
 				else
 				if(args[0].toUpperCase().equals("LEVEL") || args[0].toUpperCase().equals("LVL")) {
 					if(player != null) {
-						int level = plugin.getPlayerManager().getPlayer(player).getLevel();
+						if(!plugin.getSettingManager().isActiveWorld(plugin.getPlayerManager().getPlayer(player).getWorld()))
+							return true;
+						int level = plugin.getPlayerManager().getPlayer(player).getThiefLevel();
 						long xp = plugin.getPlayerManager().getPlayer(player).getThiefExperience();
 						long nextXP = plugin.getPlayerManager().getPlayer(player).getExperienceToNextLevel();
 						player.sendMessage(ChatColor.GREEN + "[Thieves] Current Level " + level +".");
@@ -110,6 +112,8 @@ public class CommandManager implements CommandExecutor
 				else
 				if(args[0].toUpperCase().equals("MAXVALUE")) {
 					if(player != null) {
+						if(!plugin.getSettingManager().isActiveWorld(plugin.getPlayerManager().getPlayer(player).getWorld()))
+							return true;
 						player.sendMessage(ChatColor.GREEN + "You may steal a maximum item value of " + plugin.getPlayerManager().getPlayer(player).getMaxItemWealth() + " from your targets.");
 					}
 				}

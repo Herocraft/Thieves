@@ -44,7 +44,7 @@ public class PlayerListener implements Listener
         if (entity == null)
             return;
         
-        if (plugin.getSettingManager().isActiveWorld(thief.getWorld()))
+        if (plugin.getSettingManager().isActiveWorld(thief.getWorld()) && thief.getEnabled())
         {
             if (Thieves.isTheftEnabled && thief.hasPermission("thieves.steal"))
             {
