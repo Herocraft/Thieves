@@ -39,7 +39,7 @@ public class CommandManager implements CommandExecutor
 						if(player.hasPermission("thieves.toggle"))
 							player.sendMessage(ChatColor.GOLD + "/thieves toggle [Server/Self]" + ChatColor.GREEN + " - Toggles thievery for all players (Server) or just you (Self)");
 						else
-							player.sendMessage(ChatColor.GOLD + "/thieves toggle" + ChatColor.GREEN + " - Toggles thievery on and off. While off, Shift-Clicking someone will not attempt to steal.");
+							player.sendMessage(ChatColor.GOLD + "/thieves toggle" + ChatColor.GREEN + " - Toggles thievery on and off. While off, Sneak-Clicking someone will not attempt to steal.");
 						
 						player.sendMessage(ChatColor.GOLD + "/thieves level (lvl)" + ChatColor.GREEN + " - Displays the current thievery level and remaning experience to the next level.");
 						player.sendMessage(ChatColor.GOLD + "/thieves valueof" + ChatColor.GREEN + " - Displays the item value of a given item.");
