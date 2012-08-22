@@ -29,7 +29,6 @@ public class InventoryListener implements Listener
         plugin = Thieves.getInstance();
     }
     
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event)
     {
