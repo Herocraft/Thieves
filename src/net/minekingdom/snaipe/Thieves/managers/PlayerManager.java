@@ -61,6 +61,7 @@ public class PlayerManager {
     public void removeThief(ThievesPlayer player)
     {
         stealingPlayers.remove(player);
+        plugin.getMoveChecker().removeThief(player, getTarget(player));
     }
     
     public boolean isThief(ThievesPlayer player)
@@ -79,6 +80,7 @@ public class PlayerManager {
         {
             Player splayer = thief.getPlayer();//SpoutManager.getPlayer(thief);
             splayer.closeInventory();
+            plugin.getMoveChecker().removeThief(thief, getTarget(thief));
         }
         stealingPlayers.clear();
     }
@@ -86,9 +88,10 @@ public class PlayerManager {
     public void addThief(ThievesPlayer thief, ThievesPlayer target)
     {
         stealingPlayers.put(thief, target);
+        plugin.getMoveChecker().addThief(thief.getPlayer(), target.getPlayer());
     }
 
-    public boolean isStealed(ThievesPlayer player) 
+    public boolean isStealing(ThievesPlayer player) 
     {
         return stealingPlayers.containsValue(player);
     }

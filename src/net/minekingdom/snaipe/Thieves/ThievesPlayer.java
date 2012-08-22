@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.MobEffect;
 import net.minecraft.server.MobEffectList;
 
@@ -60,17 +61,27 @@ public class ThievesPlayer implements Player
     private HashMap<World, Long> thiefExperience = new HashMap<World, Long>();
     private long cooldown = 0;
     private int itemWealth = 0;
+    private boolean isEnabled = true;
 
     public ThievesPlayer(Player player)
     {
         this.player = player;
     }
 
-    public ThievesPlayer(Player player, HashMap<World, Integer> thiefLevels, HashMap<World, Long> thiefExperience)
+    public ThievesPlayer(Player player, HashMap<World, Integer> thiefLevels, HashMap<World, Long> thiefExperience, boolean isEnabled)
     {
         this.player = player;
         this.thiefLevels = thiefLevels;
         this.thiefExperience = thiefExperience;
+        this.isEnabled = isEnabled;
+    }
+    
+    public boolean getEnabled() {
+    	return isEnabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+    	isEnabled = enabled;
     }
 
     public int getThiefLevel()
@@ -144,6 +155,14 @@ public class ThievesPlayer implements Player
             return experience;
         else
             return 0;
+    }
+    
+    public long getExperienceToNextLevel() {
+    	return getExperienceToNextLevel(getWorld());
+    }
+    
+    public long getExperienceToNextLevel(World world) {
+    	return (long)Math.ceil(100 * Math.pow(1.6681, thiefLevels.get(world)));
     }
 
     public void startStealing(ThievesPlayer target)
@@ -1086,11 +1105,11 @@ public class ThievesPlayer implements Player
         player.setTotalExperience(arg0);
     }
 
-    @Deprecated
     @Override
     public void updateInventory()
     {
-        player.updateInventory();
+    	EntityPlayer player = ((CraftPlayer)this.player).getHandle();
+        player.a(player.activeContainer, player.activeContainer.a());
     }
 
     @Override
@@ -1277,5 +1296,38 @@ public class ThievesPlayer implements Player
     public <T> void playEffect(Location arg0, Effect arg1, T arg2)
     {
         player.playEffect(arg0, arg1, arg2);
+    }
+
+	@Override
+	public boolean isBlocking() {
+		return player.isBlocking();
+	}
+
+	@Override
+	public boolean isFlying() {
+		return player.isFlying();
+	}
+
+	@Override
+	public void setFlying(boolean arg0) {
+		player.setFlying(arg0);
+	}
+
+    @Override
+    public int getExpToLevel()
+    {
+        return player.getExpToLevel();
+    }
+
+    @Override
+    public boolean hasLineOfSight(Entity arg0)
+    {
+        return player.hasLineOfSight(arg0);
+    }
+
+    @Override
+    public boolean isValid()
+    {
+        return player.isValid();
     }
 }

@@ -1,0 +1,9 @@
+.project
+.classpath
+*.class
+.DS_Store*
+Thumbs.db
+
+.settings/org.eclipse.jdt.core.prefs
+/.settings
+/target

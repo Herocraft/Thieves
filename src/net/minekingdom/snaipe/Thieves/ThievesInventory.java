@@ -246,4 +246,19 @@ public class ThievesInventory implements Inventory
     {        
         inventory.setContents(arg0);
     }
+
+	@Override
+	public int getMaxStackSize() {
+		return inventory.getMaxStackSize();
+	}
+
+	@Override
+	public ListIterator<ItemStack> iterator(int arg0) {
+		return inventory.iterator(arg0);
+	}
+
+	@Override
+	public void setMaxStackSize(int arg0) {
+		inventory.setMaxStackSize(arg0);
+	}
 }

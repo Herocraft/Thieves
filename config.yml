@@ -17,6 +17,10 @@ general:
     cooldown: 60
     # The enchantment unit multiplier - The higher this value is, the harder it will be to steal an enchanted item.
     enchantment-unit-multiplier: 0.115
+    # Amount of damage done when discovered ( Heroes Only )
+    damage: 50
+    # Multiplier for the thievery success rate, 1 is default success rate
+    steal-success-multiplier: 1
 language:
     enabled: "Theft have been enabled on the server."
     disabled: "Theft have been disabled on the server."

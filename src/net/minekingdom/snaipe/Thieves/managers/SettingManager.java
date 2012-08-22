@@ -35,6 +35,8 @@ public class SettingManager {
     private int stunTime;
     private int theftRange;
     private int cooldown;
+    private int damage;
+    private double stealChanceMultiplier;
     
 	private double enchantmentUnitMultiplier;
 
@@ -84,6 +86,8 @@ public class SettingManager {
         cooldown = config.getInt("general.cooldown", 60);
         permissionLevels = config.getBoolean("general.permission-levels", false);
         enchantmentUnitMultiplier = config.getDouble("general.enchantment-unit-multiplier", 0.115);
+        damage = config.getInt("general.damage", 20);
+        stealChanceMultiplier = config.getDouble("general.steal-success-multiplier", 1);
         
         Language.init(config);
         ItemValues.init();
@@ -137,7 +141,7 @@ public class SettingManager {
                 levels.put(world, 1);
                 experiences.put(world, (long) 0);
             }
-            return new ThievesPlayer(player, levels, experiences);
+            return new ThievesPlayer(player, levels, experiences, true);
         } 
         catch (IOException e) 
         {
@@ -154,7 +158,7 @@ public class SettingManager {
                 levels.put(world, 1);
                 experiences.put(world, (long) 0);
             }
-            return new ThievesPlayer(player, levels, experiences);
+            return new ThievesPlayer(player, levels, experiences, true);
         } 
         catch (InvalidConfigurationException e) 
         {
@@ -170,11 +174,12 @@ public class SettingManager {
                 levels.put(world, 1);
                 experiences.put(world, (long) 0);
             }
-            return new ThievesPlayer(player, levels, experiences);
+            return new ThievesPlayer(player, levels, experiences, true);
         }
         
         HashMap<World, Integer> levels = new HashMap<World, Integer>();
         HashMap<World, Long> experiences = new HashMap<World, Long>();
+        boolean isEnabled = playerData.getBoolean("Enabled", true);
         for ( String s_world : activeWorlds )
         {
             World world = plugin.getServer().getWorld(s_world);
@@ -186,13 +191,15 @@ public class SettingManager {
             levels.put(world, level);
             experiences.put(world, exp);
         }
-        
-        return new ThievesPlayer(player, levels, experiences);
+        ThievesPlayer toReturn =  new ThievesPlayer(player, levels, experiences, isEnabled);
+        if(playerData.getInt("RemainingCooldown", 0) > 0)
+        	toReturn.setCooldown(playerData.getInt("RemainingCooldown", 0));
+        return toReturn;
     }
     
     public void savePlayer(ThievesPlayer player)
     {
-        if ( plugin.getSettingManager().isPermissionLevels() )
+        if ( plugin.getSettingManager().isPermissionLevels() || player == null || plugin.getDataFolder() == null)
             return;
         
         File playerDataFile = new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + player.getName() + ".yml");
@@ -207,7 +214,8 @@ public class SettingManager {
             }
             
             playerData.load(playerDataFile);
-            
+            playerData.set("Enabled", player.getEnabled());
+            playerData.set("RemainingCooldown", player.getCooldown() / 1000);
             for ( String world : activeWorlds )
             {
                 if ( plugin.getServer().getWorld(world) == null )
@@ -245,6 +253,10 @@ public class SettingManager {
     public int getDetectRadius()
     {
         return detectRadius;
+    }
+    
+    public int getDamage() {
+    	return damage;
     }
     
     public int getStunTime()
@@ -285,5 +297,9 @@ public class SettingManager {
 	public double getEnchantmentUnitMultiplier() 
 	{
 		return enchantmentUnitMultiplier;
+	}
+	
+	public double getSuccessMultiplier() {
+		return stealChanceMultiplier;
 	}
 }
