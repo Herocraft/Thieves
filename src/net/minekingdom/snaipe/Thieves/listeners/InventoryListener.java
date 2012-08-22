@@ -104,7 +104,7 @@ public class InventoryListener implements Listener
                 
                 thief.addThiefExperience(ItemValues.valueOf(item.getType()));
                 
-                if (thief.getThiefExperience() > thief.getExperienceToNextLevel())
+                if (thief.canLevelUp())
                 {
                     thief.sendMessage(ChatColor.RED + "You're thieving level has increased to " + (thief.getThiefLevel() + 1) +"!");
                     thief.incrementThiefLevel();

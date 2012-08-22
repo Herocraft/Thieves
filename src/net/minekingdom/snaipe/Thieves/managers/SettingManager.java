@@ -90,6 +90,8 @@ public class SettingManager {
         stealChanceMultiplier = config.getDouble("general.steal-success-multiplier", 1);
         
         Language.init(config);
+        save();
+        
         ItemValues.init();
         
         if ( !permissionLevels )
@@ -100,7 +102,6 @@ public class SettingManager {
                 dataDir.mkdir();
         }
     
-        save();
     }
 
     public void save()

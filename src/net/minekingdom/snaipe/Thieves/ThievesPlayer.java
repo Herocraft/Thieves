@@ -237,6 +237,11 @@ public class ThievesPlayer implements Player
         return itemWealth;
     }
 
+    public boolean canLevelUp()
+    {
+        return getThiefExperience() > getExperienceToNextLevel();
+    }
+
     /*
      * Default bukkit implementation.
      */
