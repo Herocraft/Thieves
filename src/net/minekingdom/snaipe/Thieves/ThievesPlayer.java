@@ -187,7 +187,8 @@ public class ThievesPlayer implements Player
 
     public boolean isTargetWithinRange(Player target)
     {
-        return target.getLocation().distance(getLocation()) < Thieves.getInstance().getSettingManager().getTheftRange();
+        return target.getWorld().getName().equals(getLocation().getWorld().getName()) &&
+                target.getLocation().distance(getLocation()) < Thieves.getInstance().getSettingManager().getTheftRange();
     }
 
     public void closeWindow()
