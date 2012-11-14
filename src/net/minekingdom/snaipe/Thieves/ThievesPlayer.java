@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Note;
 import org.bukkit.Server;
+import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -1335,5 +1336,53 @@ public class ThievesPlayer implements Player
     public boolean isValid()
     {
         return player.isValid();
+    }
+
+    @Override
+    public Inventory getEnderChest()
+    {
+        return player.getEnderChest();
+    }
+
+    @Override
+    public float getFlySpeed()
+    {
+        return player.getFlySpeed();
+    }
+
+    @Override
+    public float getWalkSpeed()
+    {
+        return player.getWalkSpeed();
+    }
+
+    @Override
+    public void giveExpLevels(int arg0)
+    {
+        player.giveExpLevels(arg0);
+    }
+
+    @Override
+    public void playSound(Location arg0, Sound arg1, float arg2, float arg3)
+    {
+        player.playSound(arg0, arg1, arg2, arg3);
+    }
+
+    @Override
+    public void setBedSpawnLocation(Location arg0, boolean arg1)
+    {
+        player.setBedSpawnLocation(arg0, arg1);
+    }
+
+    @Override
+    public void setFlySpeed(float arg0) throws IllegalArgumentException
+    {
+        player.setFlySpeed(arg0);
+    }
+
+    @Override
+    public void setWalkSpeed(float arg0) throws IllegalArgumentException
+    {
+        player.setWalkSpeed(arg0);
     }
 }
