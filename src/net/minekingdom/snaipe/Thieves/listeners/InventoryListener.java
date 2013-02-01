@@ -111,7 +111,12 @@ public class InventoryListener implements Listener
                                 
                 event.setCancelled(true);
                 ItemStack cursor = new ItemStack(item.getType(), 1, item.getDurability(), item.getData().getData());
-                cursor.addEnchantments(item.getEnchantments());
+                try {
+                    cursor.addEnchantments(item.getEnchantments());
+                }
+                catch (IllegalArgumentException e) {
+                    Thieves.log("Failed to add enchantment", item.getEnchantments());
+                }
                 cursor.setDurability(item.getDurability());
                 thief.getInventory().addItem(cursor);
                 target.getInventory().removeItem(cursor);
