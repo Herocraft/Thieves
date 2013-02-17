@@ -261,4 +261,10 @@ public class ThievesInventory implements Inventory
 	public void setMaxStackSize(int arg0) {
 		inventory.setMaxStackSize(arg0);
 	}
+
+    @Override
+    public boolean containsAtLeast(ItemStack arg0, int arg1)
+    {
+        return inventory.containsAtLeast(arg0, arg1);
+    }
 }

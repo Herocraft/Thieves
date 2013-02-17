@@ -39,6 +39,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.InventoryView.Property;
@@ -1384,5 +1385,59 @@ public class ThievesPlayer implements Player
     public void setWalkSpeed(float arg0) throws IllegalArgumentException
     {
         player.setWalkSpeed(arg0);
+    }
+
+    @Override
+    public boolean getCanPickupItems()
+    {
+        return player.getCanPickupItems();
+    }
+
+    @Override
+    public EntityEquipment getEquipment()
+    {
+        return player.getEquipment();
+    }
+
+    @Override
+    public boolean getRemoveWhenFarAway()
+    {
+        return player.getRemoveWhenFarAway();
+    }
+
+    @Override
+    public void setCanPickupItems(boolean arg0)
+    {
+        player.setCanPickupItems(arg0);
+    }
+
+    @Override
+    public void setRemoveWhenFarAway(boolean arg0)
+    {
+        player.setRemoveWhenFarAway(arg0);
+    }
+
+    @Override
+    public Location getLocation(Location arg0)
+    {
+        return player.getLocation(arg0);
+    }
+
+    @Override
+    public void resetMaxHealth()
+    {
+        player.resetMaxHealth();
+    }
+
+    @Override
+    public void setMaxHealth(int arg0)
+    {
+        player.setMaxHealth(arg0);
+    }
+
+    @Override
+    public void setTexturePack(String arg0)
+    {
+        player.setTexturePack(arg0);
     }
 }
