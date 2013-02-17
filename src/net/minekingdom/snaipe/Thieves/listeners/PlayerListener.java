@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerListener implements Listener
 {
@@ -109,11 +110,11 @@ public class PlayerListener implements Listener
     {
         final Player player = event.getPlayer();
         
-        if (player != null)
-            plugin.getPlayerManager().removePlayer(player);
-        
         if (plugin.getPlayerManager().getThiefFromTarget(player) != null)
             plugin.getPlayerManager().getThiefFromTarget(player).closeInventory();
+        
+        if (player != null)
+            plugin.getPlayerManager().removePlayer(player);        
     }
     
     @EventHandler
@@ -123,5 +124,15 @@ public class PlayerListener implements Listener
         
         if (player != null)
             plugin.getPlayerManager().removePlayer(player);
+    }
+    
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event)
+    {
+        final Player player = event.getPlayer();
+        
+        if (plugin.getPlayerManager().getThiefFromTarget(player) != null) {
+            plugin.getPlayerManager().getThiefFromTarget(player).closeInventory();
+        }
     }
 }
