@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.MobEffect;
-import net.minecraft.server.MobEffectList;
+import net.minecraft.server.v1_4_R1.EntityPlayer;
+import net.minecraft.server.v1_4_R1.MobEffect;
+import net.minecraft.server.v1_4_R1.MobEffectList;
 
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
@@ -29,7 +29,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
