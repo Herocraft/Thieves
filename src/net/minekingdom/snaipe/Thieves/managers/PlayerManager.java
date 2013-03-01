@@ -100,12 +100,14 @@ public class PlayerManager {
     {
         ThievesPlayer thief = null;
         
-        for ( Entry<ThievesPlayer, ThievesPlayer> couple : stealingPlayers.entrySet() )
-        {
-            if ( couple.getValue().getDisplayName().equalsIgnoreCase(target.getDisplayName()) )
+        if (stealingPlayers.containsValue(plugin.getPlayerManager().getPlayer(target))) {
+            for ( Entry<ThievesPlayer, ThievesPlayer> couple : stealingPlayers.entrySet() )
             {
-                thief = couple.getKey();
-                break;
+                if ( couple.getValue().getDisplayName().equalsIgnoreCase(target.getDisplayName()) )
+                {
+                    thief = couple.getKey();
+                    break;
+                }
             }
         }
         
